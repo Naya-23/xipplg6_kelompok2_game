@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refleks dan Kecepatan - Klik Kotak Merah</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .game-section {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        .red-box {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        .red-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
+        }
+
+        .red-box:active {
+            transform: scale(0.95);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start {
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-reset {
+            background: linear-gradient(45deg, #ffa502, #ff6348);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 165, 2, 0.3);
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 165, 2, 0.4);
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            min-height: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .click-effect {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: clickEffect 0.5s ease-out forwards;
+        }
+
+        @keyframes clickEffect {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard {
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .leaderboard h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .name-input-section {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .name-input-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .name-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .name-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:nth-child(1) {
+            border-left-color: #ffd700;
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .leaderboard-item:nth-child(2) {
+            border-left-color: #c0c0c0;
+            background: rgba(192, 192, 192, 0.2);
+        }
+
+        .leaderboard-item:nth-child(3) {
+            border-left-color: #cd7f32;
+            background: rgba(205, 127, 50, 0.2);
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(5px);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rank {
+            font-weight: bold;
+            font-size: 1.1em;
+            width: 25px;
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        .player-name {
+            font-weight: bold;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .player-score {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #ff4757;
+        }
+
+        .clear-leaderboard {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .clear-leaderboard:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .no-scores {
+            text-align: center;
+            opacity: 0.7;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .leaderboard {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .game-area { height: 300px; }
+            .red-box { width: 60px; height: 60px; }
+            .game-stats { gap: 15px; }
+            .controls { gap: 10px; }
+            .btn { padding: 12px 20px; font-size: 1em; }
+            .leaderboard { padding: 20px; }
+        }
+
+        /* Scrollbar styling for leaderboard */
+        .leaderboard-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-section">
+            <h1>🎯 Refleks dan Kecepatan</h1>
+            <p class="subtitle">Klik Kotak Merah Secepat Mungkin!</p>
+            
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-number" id="score">0</span>
+                    <span class="stat-label">Skor</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="time">30</span>
+                    <span class="stat-label">Waktu</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="best">0</span>
+                    <span class="stat-label">Terbaik</span>
+                </div>
+            </div>
+
+            <div class="game-area" id="gameArea"></div>
+
+            <div class="controls">
+                <button class="btn btn-start" id="startBtn">🚀 Mulai</button>
+                <button class="btn btn-stop" id="stopBtn">⏹ Berhenti</button>
+                <button class="btn btn-reset" id="resetBtn">🔄 Reset</button>
+            </div>
+
+            <div class="message" id="message">Tekan "Mulai" untuk memulai permainan!</div>
+        </div>
+
+        <div class="leaderboard">
+            <h2>🏆 Leaderboard</h2>
+            
+            <div class="name-input-section">
+                <label for="playerName">Masukkan Nama:</label>
+                <input type="text" id="playerName" class="name-input" placeholder="Nama Pemain" maxlength="15" value="Player">
+            </div>
+
+            <ul class="leaderboard-list" id="leaderboardList">
+                <li class="no-scores">Belum ada skor tersimpan</li>
+            </ul>
+
+            <button class="clear-leaderboard" id="clearLeaderboard">🗑 Hapus Leaderboard</button>
+        </div>
+    </div>
+
+    <script>
+        let gameActive = false;
+        let score = 0;
+        let timeLeft = 30;
+        let gameTimer;
+        let boxTimer;
+        let currentBox = null;
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+
+        const gameArea = document.getElementById('gameArea');
+        const scoreEl = document.getElementById('score');
+        const timeEl = document.getElementById('time');
+        const bestEl = document.getElementById('best');
+        const messageEl = document.getElementById('message');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const playerNameInput = document.getElementById('playerName');
+        const leaderboardList = document.getElementById('leaderboardList');
+        const clearLeaderboardBtn = document.getElementById('clearLeaderboard');
+
+        // Initialize
+        updateBestScore();
+        updateLeaderboard();
+
+        function updateBestScore() {
+            const bestScore = leaderboard.length > 0 ? Math.max(...leaderboard.map(entry => entry.score)) : 0;
+            bestEl.textContent = bestScore;
+        }
+
+        function updateLeaderboard() {
+            // Sort leaderboard by score (descending)
+            leaderboard.sort((a, b) => b.score - a.score);
+            
+            // Keep only top 10
+            leaderboard = leaderboard.slice(0, 10);
+            
+            // Save to localStorage
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+            
+            // Update display
+            leaderboardList.innerHTML = '';
+            
+            if (leaderboard.length === 0) {
+                leaderboardList.innerHTML = '<li class="no-scores">Belum ada skor tersimpan</li>';
+                return;
+            }
+            
+            leaderboard.forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.className = 'leaderboard-item';
+                
+                const rank = index + 1;
+                const rankClass = rank <= 3 ? rank-${rank} : '';
+                
+                li.innerHTML = `
+                    <div class="player-info">
+                        <span class="rank ${rankClass}">#${rank}</span>
+                        <span class="player-name" title="${entry.name}">${entry.name}</span>
+                    </div>
+                    <span class="player-score">${entry.score}</span>
+                `;
+                
+                leaderboardList.appendChild(li);
+            });
+        }
+
+        function addToLeaderboard(name, score) {
+            const entry = {
+                name: name.trim() || 'Anonymous',
+                score: score,
+                date: new Date().toLocaleDateString('id-ID')
+            };
+            
+            leaderboard.push(entry);
+            updateLeaderboard();
+            updateBestScore();
+        }
+
+        function createRedBox() {
+            if (!gameActive) return;
+
+            // Remove existing box
+            if (currentBox) {
+                currentBox.remove();
+            }
+
+            // Create new box
+            const box = document.createElement('div');
+            box.className = 'red-box';
+            
+            // Random position
+            const maxX = gameArea.offsetWidth - 80;
+            const maxY = gameArea.offsetHeight - 80;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            box.style.left = x + 'px';
+            box.style.top = y + 'px';
+
+            // Click handler
+            box.addEventListener('click', function(e) {
+                if (!gameActive) return;
+                
+                score++;
+                scoreEl.textContent = score;
+                
+                // Create click effect
+                createClickEffect(e.pageX, e.pageY);
+                
+                // Remove box and create new one
+                box.remove();
+                currentBox = null;
+                
+                // Create next box with slight delay
+                setTimeout(createRedBox, Math.random() * 200 + 100);
+                
+                // Update message
+                const messages = ['Bagus! 👍', 'Cepat! ⚡', 'Mantap! 🔥', 'Keren! ✨', 'Hebat! 🌟'];
+                messageEl.textContent = messages[Math.floor(Math.random() * messages.length)];
+            });
+
+            gameArea.appendChild(box);
+            currentBox = box;
+
+            // Auto-remove box after some time
+            setTimeout(() => {
+                if (box.parentNode && gameActive) {
+                    box.remove();
+                    if (currentBox === box) {
+                        currentBox = null;
+                        setTimeout(createRedBox, Math.random() * 300 + 200);
+                    }
+                }
+            }, Math.random() * 2000 + 1500);
+        }
+
+        function createClickEffect(x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.style.left = (x - 10) + 'px';
+            effect.style.top = (y - 10) + 'px';
+            document.body.appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 500);
+        }
+
+        function startGame() {
+            gameActive = true;
+            score = 0;
+            timeLeft = 30;
+            scoreEl.textContent = score;
+            timeEl.textContent = timeLeft;
+            messageEl.textContent = 'Klik kotak merah secepat mungkin!';
+            
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            // Start timer
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                timeEl.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            },
