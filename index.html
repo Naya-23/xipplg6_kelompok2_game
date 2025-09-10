@@ -3,328 +3,1214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroZone - Top Up Gaming Retro Style</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <title>Red Click Rush - Klik Kotak Merah</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+           background: linear-gradient(135deg, #000000 0%, #6223a1 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .game-section {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        .red-box {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        .red-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
+        }
+
+        .red-box:active {
+            transform: scale(0.95);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start {
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-continue {
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-continue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
+        }
+
+        .btn-reset {
+            background: linear-gradient(45deg, #ffa502, #ff6348);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 165, 2, 0.3);
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 165, 2, 0.4);
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            min-height: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .click-effect {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: clickEffect 0.5s ease-out forwards;
+        }
+
+        @keyframes clickEffect {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard {
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .leaderboard h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .name-input-section {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .name-input-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .name-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .name-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .leaderboard-list {
+            list-style: none;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:nth-child(1) {
+            border-left-color: #ffd700;
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .leaderboard-item:nth-child(2) {
+            border-left-color: #c0c0c0;
+            background: rgba(192, 192, 192, 0.2);
+        }
+
+        .leaderboard-item:nth-child(3) {
+            border-left-color: #cd7f32;
+            background: rgba(205, 127, 50, 0.2);
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(5px);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rank {
+            font-weight: bold;
+            font-size: 1.1em;
+            width: 25px;
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        .player-name {
+            font-weight: bold;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .player-score {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #ff4757;
+        }
+
+        .no-scores {
+            text-align: center;
+            opacity: 0.7;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* Tutorial Overlay Styles */
+        .tutorial-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .tutorial-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: white;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .tutorial-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tutorial-step {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tutorial-step h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .tutorial-step p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .tutorial-feature {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .tutorial-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .tutorial-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .tutorial-btn-prev {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tutorial-btn-next, .tutorial-btn-start {
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+        }
+
+        .tutorial-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .tutorial-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .tutorial-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .tutorial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-dot.active {
+            background: #ffd700;
+            transform: scale(1.2);
+        }
+
+        .tutorial-skip {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-skip:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .highlight-element {
+            position: relative;
+            z-index: 10000;
+            box-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700;
+            border: 3px solid #ffd700 !important;
+            border-radius: 15px !important;
+            animation: highlightPulse 2s infinite;
+        }
+
+        @keyframes highlightPulse {
+            0%, 100% { box-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700; }
+            50% { box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .leaderboard {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .game-area { height: 300px; }
+            .red-box { width: 60px; height: 60px; }
+            .game-stats { gap: 15px; }
+            .controls { gap: 10px; }
+            .btn { padding: 12px 20px; font-size: 1em; }
+            .leaderboard { padding: 20px; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <nav class="container">
-            <div class="logo">
-                <i class="fas fa-gamepad retro-icon"></i>
-                <span class="logo-text">RETROZONE</span>
+    <div class="container">
+        <!-- Tutorial Overlay -->
+        <div class="tutorial-overlay" id="tutorialOverlay">
+            <div class="tutorial-content">
+                <button class="tutorial-skip" id="tutorialSkip">✕ Lewati</button>
+                
+                <h2 class="tutorial-title">🎯 Selamat Datang!</h2>
+                
+                <div class="tutorial-step" id="tutorialStep">
+                    <!-- Tutorial content will be dynamically inserted here -->
+                </div>
+                
+                <div class="tutorial-progress" id="tutorialProgress">
+                    <!-- Progress dots will be dynamically inserted here -->
+                </div>
+                
+                <div class="tutorial-navigation">
+                    <button class="tutorial-btn tutorial-btn-prev" id="tutorialPrev" disabled>← Sebelumnya</button>
+                    <button class="tutorial-btn tutorial-btn-next" id="tutorialNext">Selanjutnya →</button>
+                </div>
             </div>
-            <ul class="nav-links">
-                <li><a href="#home">HOME</a></li>
-                <li><a href="#games">GAMES</a></li>
-                <li><a href="#how-to">HOW TO</a></li>
-                <li><a href="#contact">CONTACT</a></li>
+        </div>
+
+        <div class="game-section">
+            <h1>🎯 Refleks dan Kecepatan</h1>
+            <p class="subtitle">Klik Kotak Merah Secepat Mungkin!</p>
+            
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-number" id="score">0</span>
+                    <span class="stat-label">Skor</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="time">30</span>
+                    <span class="stat-label">Waktu</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="best">0</span>
+                    <span class="stat-label">Terbaik</span>
+                </div>
+            </div>
+
+            <div class="game-area" id="gameArea"></div>
+
+            <div class="controls">
+                <button class="btn btn-start" id="startBtn">🚀 Mulai</button>
+                <button class="btn btn-stop" id="pauseBtn">⏸ Berhenti</button>
+                <button class="btn btn-reset" id="resetBtn">🔄 Reset</button>
+            </div>
+
+            <div class="message" id="message">Tekan "Mulai" untuk memulai permainan!</div>
+        </div>
+
+        <div class="leaderboard">
+            <h2>🏆 Leaderboard</h2>
+            
+            <div class="name-input-section">
+                <label for="playerName">Masukkan Nama:</label>
+                <input type="text" id="playerName" class="name-input" placeholder="Nama Pemain" maxlength="15" value="Player">
+            </div>
+
+            <div class="sound-toggle-section" style="margin-bottom: 20px; text-align: center;">
+                <button class="sound-toggle-btn" id="soundToggle" style="padding: 10px 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 25px; background: rgba(255,255,255,0.1); color: white; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                    🔊 Sound: ON
+                </button>
+            </div>
+            
+            <div style="margin-bottom: 20px; text-align: center;">
+                <button onclick="resetTutorial()" style="padding: 8px 16px; border: 2px solid rgba(255,255,255,0.3); border-radius: 20px; background: rgba(255,255,255,0.1); color: white; cursor: pointer; font-weight: bold; transition: all 0.3s ease; font-size: 0.9em;">
+                    📚 Lihat Tutorial Lagi
+                </button>
+            </div>
+
+            <ul class="leaderboard-list" id="leaderboardList">
+                <li class="no-scores">Belum ada skor tersimpan</li>
             </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>PIXEL PERFECT TOP-UP</h1>
-                <p>Level up your gaming experience with lightning-fast top-ups</p>
-                
-                <!-- Search Container -->
-                <div class="search-container">
-                    <input type="text" id="gameSearch" class="search-box" placeholder="Search your favorite game...">
-                </div>
-                
-                <!-- Quick Access Buttons -->
-                <div class="quick-access">
-                    <a href="#" class="quick-btn" data-game="mobile-legends">
-                        <i class="fas fa-shield-alt"></i>
-                        Mobile Legends
-                    </a>
-                    <a href="#" class="quick-btn" data-game="free-fire">
-                        <i class="fas fa-fire"></i>
-                        Free Fire
-                    </a>
-                    <a href="#" class="quick-btn" data-game="pubg">
-                        <i class="fas fa-crosshairs"></i>
-                        PUBG Mobile
-                    </a>
-                    <a href="#" class="quick-btn" data-game="valorant">
-                        <i class="fas fa-bullseye"></i>
-                        Valorant
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Search Results Section -->
-    <section class="search-results" id="searchResults">
-        <div class="container">
-            <h3>Search Results</h3>
-            <div class="search-results-grid" id="searchResultsGrid">
-                <!-- Search results will be populated here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Games Section -->
-    <section id="games" class="games">
-        <div class="container">
-            <h2 class="section-title neon-text">SELECT YOUR GAME</h2>
-            <div class="games-grid">
-                <div class="game-card" data-game="mobile-legends">
-                    <div class="card-glow"></div>
-                    <div class="game-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>MOBILE LEGENDS</h3>
-                    <p class="price">Diamond ML from IDR 10K</p>
-                    <div class="card-scanline"></div>
-                    <button class="select-game-btn pixel-btn">SELECT</button>
-                </div>
-                
-                <div class="game-card" data-game="free-fire">
-                    <div class="card-glow"></div>
-                    <div class="game-icon">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                    <h3>FREE FIRE</h3>
-                    <p class="price">Diamond FF from IDR 5K</p>
-                    <div class="card-scanline"></div>
-                    <button class="select-game-btn pixel-btn">SELECT</button>
-                </div>
-                
-                <div class="game-card" data-game="pubg">
-                    <div class="card-glow"></div>
-                    <div class="game-icon">
-                        <i class="fas fa-crosshairs"></i>
-                    </div>
-                    <h3>PUBG MOBILE</h3>
-                    <p class="price">UC PUBG from IDR 15K</p>
-                    <div class="card-scanline"></div>
-                    <button class="select-game-btn pixel-btn">SELECT</button>
-                </div>
-                
-                <div class="game-card" data-game="valorant">
-                    <div class="card-glow"></div>
-                    <div class="game-icon">
-                        <i class="fas fa-bullseye"></i>
-                    </div>
-                    <h3>VALORANT</h3>
-                    <p class="price">VP Valorant from IDR 20K</p>
-                    <div class="card-scanline"></div>
-                    <button class="select-game-btn pixel-btn">SELECT</button>
-                </div>
-
-                <div class="game-card" data-game="genshin">
-                    <div class="card-glow"></div>
-                    <div class="game-icon">
-                        <i class="fas fa-magic"></i>
-                    </div>
-                    <h3>GENSHIN IMPACT</h3>
-                    <p class="price">Genesis Crystal from IDR 16K</p>
-                    <div class="card-scanline"></div>
-                    <button class="select-game-btn pixel-btn">SELECT</button>
-                </div>
-
-                <div class="game-card" data-game="cod">
-                    <div class="card-glow"></div>
-                    <div class="game-icon">
-                        <i class="fas fa-bomb"></i>
-                    </div>
-                    <h3>CALL OF DUTY</h3>
-                    <p class="price">CP COD from IDR 15K</p>
-                    <div class="card-scanline"></div>
-                    <button class="select-game-btn pixel-btn">SELECT</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Order Modal -->
-    <div id="orderModal" class="modal">
-        <div class="modal-content retro-terminal">
-            <div class="terminal-header">
-                <span class="terminal-title">>>> ORDER SYSTEM v2.0 <<<</span>
-                <span class="close">&times;</span>
-            </div>
-            <div class="terminal-body">
-                <form id="orderForm">
-                    <div class="form-group">
-                        <label class="terminal-label">SELECTED_GAME:</label>
-                        <input type="text" id="gameTitle" name="gameTitle" class="terminal-input" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="terminal-label">USER_ID:</label>
-                        <input type="text" id="userId" name="userId" class="terminal-input" placeholder="Enter your User ID" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="terminal-label">SERVER_ID:</label>
-                        <input type="text" id="serverId" name="serverId" class="terminal-input" placeholder="Enter Server ID (if any)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="terminal-label">PACKAGE_SELECT:</label>
-                        <select id="package" name="package" class="terminal-input" required>
-                            <option value="">Choose Package</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="terminal-label">PLAYER_NAME:</label>
-                        <input type="text" id="customerName" name="customerName" class="terminal-input" placeholder="Full Name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="terminal-label">WHATSAPP_NUMBER:</label>
-                        <input type="tel" id="customerPhone" name="customerPhone" class="terminal-input" placeholder="08xxxxxxxxxx" required>
-                    </div>
-                    
-                    <button type="submit" class="neon-button submit-btn">
-                        <span>ORDER VIA WHATSAPP</span>
-                        <i class="fab fa-whatsapp"></i>
-                    </button>
-                </form>
-            </div>
         </div>
     </div>
 
-    <!-- How To Section -->
-    <section id="how-to" class="how-to">
-        <div class="container">
-            <h2 class="section-title neon-text">MISSION PROTOCOL</h2>
-            <div class="steps">
-                <div class="step retro-card">
-                    <div class="step-number">01</div>
-                    <h3>SELECT GAME</h3>
-                    <p>Choose your favorite game from our retro arcade collection</p>
-                    <div class="step-glow"></div>
-                </div>
-                <div class="step retro-card">
-                    <div class="step-number">02</div>
-                    <h3>INPUT DATA</h3>
-                    <p>Enter your User ID, select package, and fill order details</p>
-                    <div class="step-glow"></div>
-                </div>
-                <div class="step retro-card">
-                    <div class="step-number">03</div>
-                    <h3>WHATSAPP CHAT</h3>
-                    <p>Click WhatsApp button to continue order and payment</p>
-                    <div class="step-glow"></div>
-                </div>
-                <div class="step retro-card">
-                    <div class="step-number">04</div>
-                    <h3>GAME ON</h3>
-                    <p>Diamonds/coins will be delivered to your account instantly</p>
-                    <div class="step-glow"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <script>
+        // Game state variables
+        let gameActive = false;
+        let gamePaused = false;
+        let score = 0;
+        let timeLeft = 30;
+        let gameTimer = null;
+        let currentBox = null;
+        let leaderboard = [];
+        let soundEnabled = true;
+        
+        // Tutorial state
+        let currentTutorialStep = 0;
+        let tutorialActive = true;
+        
+        // Audio context and sound effects
+        let audioContext = null;
+        let sounds = {};
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title neon-text">SUPPORT CENTER</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item retro-card">
-                        <i class="fab fa-whatsapp neon-icon"></i>
-                        <div>
-                            <h3>WHATSAPP</h3>
-                            <p>+62 823-2731-8877</p>
-                        </div>
-                        <div class="step-glow"></div>
-                    </div>
-                    <div class="contact-item retro-card">
-                        <i class="fas fa-clock neon-icon"></i>
-                        <div>
-                            <h3>ONLINE STATUS</h3>
-                            <p>24/7 ACTIVE</p>
-                        </div>
-                        <div class="step-glow"></div>
-                    </div>
-                    <div class="contact-item retro-card">
-                        <i class="fas fa-bolt neon-icon"></i>
-                        <div>
-                            <h3>PROCESS TIME</h3>
-                            <p>1-5 MINUTES</p>
-                        </div>
-                        <div class="step-glow"></div>
-                    </div>
-                </div>
-                <div class="whatsapp-direct retro-terminal">
-                    <div class="terminal-header">
-                        <span class="terminal-title">>>> DIRECT CHAT <<<</span>
-                    </div>
-                    <div class="terminal-body">
-                        <h3>NEED HELP?</h3>
-                        <p>Chat with our admin now!</p>
-                        <a href="https://wa.me/6281234567890?text=Hello%20admin,%20I%20want%20to%20ask%20about%20top-up%20services" 
-                           class="neon-button whatsapp-btn" target="_blank">
-                            <span>CHAT ADMIN</span>
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        // Tutorial steps data
+        const tutorialSteps = [
+            {
+                title: "🎮 Cara Bermain",
+                content: "Permainan ini menguji refleks dan kecepatan Anda! Kotak merah akan muncul secara acak di area permainan. Tugas Anda adalah mengklik kotak tersebut secepat mungkin dalam waktu <span class='tutorial-feature'>30 detik</span>."
+            },
+            {
+                title: "📊 Informasi Permainan",
+                content: "<span class='tutorial-feature'>Skor</span>: Jumlah kotak merah yang berhasil Anda klik<br><span class='tutorial-feature'>Waktu</span>: Sisa waktu permainan dalam detik<br><span class='tutorial-feature'>Terbaik</span>: Skor tertinggi dari semua pemain dalam sesi ini",
+                highlight: ".game-stats"
+            },
+            {
+                title: "🚀 Tombol Kontrol - Mulai",
+                content: "Tekan tombol <span class='tutorial-feature'>🚀 Mulai</span> untuk memulai permainan baru. Setelah ditekan, kotak merah akan mulai muncul dan timer akan berjalan.",
+                highlight: "#startBtn"
+            },
+            {
+                title: "⏸ Tombol Kontrol - Berhenti/Lanjut",
+                content: "Selama permainan, tombol ini berubah menjadi <span class='tutorial-feature'>⏸ Berhenti</span> untuk menjeda permainan. Saat dijeda, tombol berubah menjadi <span class='tutorial-feature'>▶ Lanjut</span> untuk melanjutkan permainan.",
+                highlight: "#pauseBtn"
+            },
+            {
+                title: "🔄 Tombol Reset",
+                content: "Gunakan tombol <span class='tutorial-feature'>🔄 Reset</span> untuk mengatur ulang permainan ke kondisi awal. Skor akan kembali ke 0 dan timer ke 30 detik.",
+                highlight: "#resetBtn"
+            },
+            {
+                title: "👤 Input Nama Pemain",
+                content: "Masukkan nama Anda di kolom <span class='tutorial-feature'>Nama Pemain</span>. Nama ini akan ditampilkan di leaderboard saat Anda menyelesaikan permainan dengan skor di atas 0.",
+                highlight: "#playerName"
+            },
+            {
+                title: "🔊 Kontrol Suara",
+                content: "Klik tombol <span class='tutorial-feature'>🔊 Sound</span> untuk menyalakan/mematikan efek suara permainan. Efek suara meliputi bunyi klik, notifikasi waktu, dan musik permainan.",
+                highlight: "#soundToggle"
+            },
+            {
+                title: "🏆 Leaderboard",
+                content: "Leaderboard menampilkan 5 skor terbaik dalam sesi ini. Posisi 1-3 diberi highlight khusus dengan warna emas, perak, dan perunggu. Skor Anda akan otomatis ditambahkan setelah permainan selesai.",
+                highlight: ".leaderboard"
+            },
+            {
+                title: "🎯 Siap Bermain!",
+                content: "Sekarang Anda sudah siap! Ingat kunci sukses: <br>• <span class='tutorial-feature'>Fokus</span> pada area permainan<br>• <span class='tutorial-feature'>Klik cepat</span> saat kotak muncul<br>• <span class='tutorial-feature'>Jangan panik</span> saat waktu hampir habis<br><br>Selamat bermain dan semoga berhasil! 🎉"
+            }
+        ];
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="logo">
-                        <i class="fas fa-gamepad retro-icon"></i>
-                        <span class="logo-text">RETROZONE</span>
+        // DOM elements
+        const gameArea = document.getElementById('gameArea');
+        const scoreEl = document.getElementById('score');
+        const timeEl = document.getElementById('time');
+        const bestEl = document.getElementById('best');
+        const messageEl = document.getElementById('message');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const playerNameInput = document.getElementById('playerName');
+        const leaderboardList = document.getElementById('leaderboardList');
+        const soundToggleBtn = document.getElementById('soundToggle');
+        
+        // Tutorial DOM elements
+        const tutorialOverlay = document.getElementById('tutorialOverlay');
+        const tutorialStep = document.getElementById('tutorialStep');
+        const tutorialProgress = document.getElementById('tutorialProgress');
+        const tutorialPrev = document.getElementById('tutorialPrev');
+        const tutorialNext = document.getElementById('tutorialNext');
+        const tutorialSkip = document.getElementById('tutorialSkip');
+
+        // Tutorial functions
+        function initTutorial() {
+            // Check if user has seen tutorial before
+            const hasSeenTutorial = localStorage.getItem('reflexGameTutorialSeen');
+            
+            if (hasSeenTutorial) {
+                tutorialActive = false;
+                tutorialOverlay.style.display = 'none';
+                return;
+            }
+            
+            renderTutorialStep();
+            createTutorialProgress();
+        }
+
+        function renderTutorialStep() {
+            const step = tutorialSteps[currentTutorialStep];
+            
+            tutorialStep.innerHTML = `
+                <h3>${step.title}</h3>
+                <p>${step.content}</p>
+            `;
+            
+            // Remove previous highlights
+            document.querySelectorAll('.highlight-element').forEach(el => {
+                el.classList.remove('highlight-element');
+            });
+            
+            // Add highlight to current element
+            if (step.highlight) {
+                const element = document.querySelector(step.highlight);
+                if (element) {
+                    element.classList.add('highlight-element');
+                }
+            }
+            
+            // Update navigation buttons
+            tutorialPrev.disabled = currentTutorialStep === 0;
+            
+            if (currentTutorialStep === tutorialSteps.length - 1) {
+                tutorialNext.textContent = 'Mulai Bermain! 🚀';
+                tutorialNext.className = 'tutorial-btn tutorial-btn-start';
+            } else {
+                tutorialNext.textContent = 'Selanjutnya →';
+                tutorialNext.className = 'tutorial-btn tutorial-btn-next';
+            }
+            
+            updateTutorialProgress();
+        }
+
+        function createTutorialProgress() {
+            tutorialProgress.innerHTML = '';
+            
+            for (let i = 0; i < tutorialSteps.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'tutorial-dot';
+                if (i === currentTutorialStep) {
+                    dot.classList.add('active');
+                }
+                tutorialProgress.appendChild(dot);
+            }
+        }
+
+        function updateTutorialProgress() {
+            const dots = tutorialProgress.querySelectorAll('.tutorial-dot');
+            dots.forEach((dot, index) => {
+                if (index === currentTutorialStep) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextTutorialStep() {
+            if (currentTutorialStep < tutorialSteps.length - 1) {
+                currentTutorialStep++;
+                renderTutorialStep();
+                playSound('button');
+            } else {
+                closeTutorial();
+            }
+        }
+
+        function prevTutorialStep() {
+            if (currentTutorialStep > 0) {
+                currentTutorialStep--;
+                renderTutorialStep();
+                playSound('button');
+            }
+        }
+
+        function closeTutorial() {
+            tutorialActive = false;
+            tutorialOverlay.style.display = 'none';
+            
+            // Remove highlights
+            document.querySelectorAll('.highlight-element').forEach(el => {
+                el.classList.remove('highlight-element');
+            });
+            
+            // Remember that user has seen tutorial
+            localStorage.setItem('reflexGameTutorialSeen', 'true');
+            
+            playSound('gameStart');
+        }
+
+        function resetTutorial() {
+            localStorage.removeItem('reflexGameTutorialSeen');
+            currentTutorialStep = 0;
+            tutorialActive = true;
+            tutorialOverlay.style.display = 'flex';
+            renderTutorialStep();
+            createTutorialProgress();
+        }
+
+        // Initialize audio system
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                createSounds();
+            } catch (e) {
+                console.warn('Audio not supported');
+                soundEnabled = false;
+                updateSoundToggle();
+            }
+        }
+
+        // Create sound effects using Web Audio API
+        function createSounds() {
+            sounds.click = createBeep(800, 0.1, 0.3, 'square');
+            sounds.gameStart = createMelody([440, 554, 659], 0.15);
+            sounds.gameEnd = createMelody([659, 554, 440], 0.2);
+            sounds.newRecord = createMelody([523, 659, 784, 1047], 0.3);
+            sounds.tick = createBeep(400, 0.05, 0.1, 'sine');
+            sounds.finalTick = createBeep(800, 0.1, 0.2, 'sawtooth');
+            sounds.button = createBeep(600, 0.08, 0.15, 'triangle');
+        }
+
+        function createBeep(frequency, duration, volume = 0.3, type = 'sine') {
+            return function() {
+                if (!soundEnabled || !audioContext) return;
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = type;
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            };
+        }
+
+        function createMelody(frequencies, noteDuration) {
+            return function() {
+                if (!soundEnabled || !audioContext) return;
+                
+                frequencies.forEach((freq, index) => {
+                    setTimeout(() => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.value = freq;
+                        oscillator.type = 'triangle';
+                        
+                        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.01);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + noteDuration - 0.01);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + noteDuration);
+                    }, index * noteDuration * 800);
+                });
+            };
+        }
+
+        function playSound(soundName) {
+            if (sounds[soundName] && soundEnabled) {
+                sounds[soundName]();
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            updateSoundToggle();
+            playSound('button');
+        }
+
+        function updateSoundToggle() {
+            soundToggleBtn.textContent = soundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
+            soundToggleBtn.style.opacity = soundEnabled ? '1' : '0.6';
+        }
+
+        function updateBestScore() {
+            const bestScore = leaderboard.length > 0 ? Math.max(...leaderboard.map(entry => entry.score)) : 0;
+            bestEl.textContent = bestScore;
+        }
+
+        function updateLeaderboard() {
+            leaderboard.sort((a, b) => b.score - a.score);
+            leaderboard = leaderboard.slice(0, 5); // Limit to 5 players
+            
+            leaderboardList.innerHTML = '';
+            
+            if (leaderboard.length === 0) {
+                leaderboardList.innerHTML = '<li class="no-scores">Belum ada skor tersimpan</li>';
+                return;
+            }
+            
+            leaderboard.forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.className = 'leaderboard-item';
+                
+                const rank = index + 1;
+                
+                li.innerHTML = `
+                    <div class="player-info">
+                        <span class="rank rank-${rank <= 3 ? rank : ''}">${rank}.</span>
+                        <span class="player-name">${entry.name}</span>
                     </div>
-                    <p>Your trusted retro gaming top-up platform with 24/7 service and lightning-fast delivery.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>POPULAR GAMES</h3>
-                    <ul>
-                        <li>Mobile Legends</li>
-                        <li>Free Fire</li>
-                        <li>PUBG Mobile</li>
-                        <li>Valorant</li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>CONTACT INFO</h3>
-                    <ul>
-                        <li><i class="fab fa-whatsapp"></i> +62 812-3456-7890</li>
-                        <li><i class="fas fa-envelope"></i> info@retrozone.com</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Indonesia</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 RetroZone. All rights reserved. | Game on!</p>
-            </div>
-        </div>
-    </footer>
+                    <span class="player-score">${entry.score}</span>
+                `;
+                
+                leaderboardList.appendChild(li);
+            });
+        }
 
-    <!-- WhatsApp Floating Button -->
-    <div class="whatsapp-float">
-        <a href="https://wa.me/6282327318877?text=Hello%20admin,%20I%20want%20to%20top%20up%20my%20game" target="_blank" class="pulse-btn">
-            <i class="fab fa-whatsapp"></i>
-        </a>
-    </div>
+        function addToLeaderboard(name, score) {
+            const entry = {
+                name: name.trim() || 'Anonymous',
+                score: score,
+                date: new Date().toLocaleDateString('id-ID')
+            };
+            
+            leaderboard.push(entry);
+            updateLeaderboard();
+            updateBestScore();
+        }
 
-    <script src="script.js"></script>
+        function createRedBox() {
+            if (!gameActive) return;
+
+            // Remove existing box
+            if (currentBox) {
+                currentBox.remove();
+            }
+
+            // Create new box
+            const box = document.createElement('div');
+            box.className = 'red-box';
+            
+            // Random position
+            const maxX = gameArea.offsetWidth - 80;
+            const maxY = gameArea.offsetHeight - 80;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            box.style.left = x + 'px';
+            box.style.top = y + 'px';
+
+            // Click handler
+            box.addEventListener('click', function(e) {
+                if (!gameActive) return;
+                
+                score++;
+                scoreEl.textContent = score;
+                
+                playSound('click');
+                createClickEffect(e.clientX, e.clientY);
+                
+                box.remove();
+                currentBox = null;
+                
+                setTimeout(createRedBox, Math.random() * 200 + 100);
+                
+                const messages = ['Bagus! 👍', 'Cepat! ⚡', 'Mantap! 🔥', 'Keren! ✨', 'Hebat! 🌟'];
+                messageEl.textContent = messages[Math.floor(Math.random() * messages.length)];
+            });
+
+            gameArea.appendChild(box);
+            currentBox = box;
+
+            // Auto-remove box after some time
+            setTimeout(() => {
+                if (box.parentNode && gameActive) {
+                    box.remove();
+                    if (currentBox === box) {
+                        currentBox = null;
+                        setTimeout(createRedBox, Math.random() * 300 + 200);
+                    }
+                }
+            }, Math.random() * 2000 + 1500);
+        }
+
+        function createClickEffect(x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.style.left = (x - 10) + 'px';
+            effect.style.top = (y - 10) + 'px';
+            effect.style.position = 'fixed';
+            effect.style.zIndex = '1000';
+            document.body.appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 500);
+        }
+
+        function startGame() {
+            // Don't start if tutorial is active
+            if (tutorialActive) {
+                return;
+            }
+            
+            // Initialize audio context on user interaction
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            // Reset game state
+            gameActive = true;
+            gamePaused = false;
+            score = 0;
+            timeLeft = 30;
+            
+            // Update display
+            scoreEl.textContent = score;
+            timeEl.textContent = timeLeft;
+            messageEl.textContent = 'Klik kotak merah secepat mungkin!';
+            
+            // Remove any existing box
+            if (currentBox) {
+                currentBox.remove();
+                currentBox = null;
+            }
+            
+            // Update buttons
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            pauseBtn.textContent = '⏸ Berhenti';
+            pauseBtn.className = 'btn btn-stop';
+            
+            playSound('gameStart');
+            
+            // Clear any existing timer
+            if (gameTimer) {
+                clearInterval(gameTimer);
+            }
+            
+            // Start new timer
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                timeEl.textContent = timeLeft;
+                
+                if (timeLeft <= 5 && timeLeft > 0) {
+                    playSound('finalTick');
+                } else if (timeLeft > 5 && timeLeft % 5 === 0) {
+                    playSound('tick');
+                }
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            createRedBox();
+        }
+
+        function pauseGame() {
+            if (!gameActive) return;
+            
+            gameActive = false;
+            gamePaused = true;
+            
+            if (gameTimer) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+            }
+            
+            startBtn.disabled = false;
+            pauseBtn.textContent = '▶ Lanjut';
+            pauseBtn.className = 'btn btn-continue';
+            messageEl.textContent = 'Game dijeda. Tekan "Lanjut" untuk melanjutkan!';
+            
+            playSound('button');
+        }
+
+        function resumeGame() {
+            if (!gamePaused || timeLeft <= 0) return;
+            
+            gameActive = true;
+            gamePaused = false;
+            
+            startBtn.disabled = true;
+            pauseBtn.textContent = '⏸ Berhenti';
+            pauseBtn.className = 'btn btn-stop';
+            messageEl.textContent = 'Klik kotak merah secepat mungkin!';
+            
+            playSound('button');
+            
+            if (gameTimer) {
+                clearInterval(gameTimer);
+            }
+            
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                timeEl.textContent = timeLeft;
+                
+                if (timeLeft <= 5 && timeLeft > 0) {
+                    playSound('finalTick');
+                } else if (timeLeft > 5 && timeLeft % 5 === 0) {
+                    playSound('tick');
+                }
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            if (!currentBox) {
+                createRedBox();
+            }
+        }
+
+        function endGame() {
+            gameActive = false;
+            gamePaused = false;
+            
+            if (gameTimer) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+            }
+            
+            if (currentBox) {
+                currentBox.remove();
+                currentBox = null;
+            }
+            
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            pauseBtn.textContent = '⏸ Berhenti';
+            pauseBtn.className = 'btn btn-stop';
+            
+            if (score > 0) {
+                const playerName = playerNameInput.value.trim() || 'Anonymous';
+                addToLeaderboard(playerName, score);
+                
+                const currentBest = parseInt(bestEl.textContent);
+                if (score >= currentBest) {
+                    messageEl.textContent = `🎉 Rekor Baru! Skor: ${score};`
+                    playSound('newRecord');
+                } else {
+                    messageEl.textContent = `⏰ Waktu Habis! Skor: ${score} - Ditambahkan ke leaderboard!;`
+                    playSound('gameEnd');
+                }
+            } else {
+                messageEl.textContent = '⏰ Waktu Habis! Tidak ada skor untuk disimpan.';
+                playSound('gameEnd');
+            }
+        }
+
+        function resetGame() {
+            gameActive = false;
+            gamePaused = false;
+            
+            if (gameTimer) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+            }
+            
+            if (currentBox) {
+                currentBox.remove();
+                currentBox = null;
+            }
+            
+            score = 0;
+            timeLeft = 30;
+            scoreEl.textContent = score;
+            timeEl.textContent = timeLeft;
+            messageEl.textContent = 'Tekan "Mulai" untuk memulai permainan!';
+            
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            pauseBtn.textContent = '⏸ Berhenti';
+            pauseBtn.className = 'btn btn-stop';
+            
+            playSound('button');
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        pauseBtn.addEventListener('click', function() {
+            if (gamePaused) {
+                resumeGame();
+            } else {
+                pauseGame();
+            }
+        });
+        resetBtn.addEventListener('click', resetGame);
+        soundToggleBtn.addEventListener('click', toggleSound);
+
+        // Tutorial event listeners
+        tutorialNext.addEventListener('click', nextTutorialStep);
+        tutorialPrev.addEventListener('click', prevTutorialStep);
+        tutorialSkip.addEventListener('click', closeTutorial);
+
+        // Keyboard navigation for tutorial
+        document.addEventListener('keydown', function(e) {
+            if (!tutorialActive) return;
+            
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                e.preventDefault();
+                nextTutorialStep();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevTutorialStep();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                closeTutorial();
+            }
+        });
+
+        playerNameInput.addEventListener('input', function() {
+            // Just for reactivity, value is read when needed
+        });
+
+        gameArea.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Initialize
+        initAudio();
+        initTutorial();
+        updateBestScore();
+        updateLeaderboard();
+        
+        // Initial button state
+        pauseBtn.disabled = true;
+    </script>
 </body>
-</html> 
+</html>
